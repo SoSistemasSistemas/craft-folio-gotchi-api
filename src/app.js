@@ -7,6 +7,7 @@ const app = express();
 const { API_PORT } = process.env;
 
 const authRouter = require('./routers/auth.router');
+const userRouter = require('./routers/user.router');
 
 require('./config/database.config');
 
@@ -16,6 +17,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.use('/auth', authRouter);
+app.use('/users', userRouter);
 
 app.use('/', (_, res) => {
   res.json({ msg: 'Hello from CraftFolioGotchi API!' });
