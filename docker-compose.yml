@@ -9,7 +9,17 @@ services:
       - NODE_ENV=development
       - API_PORT=3000
       - JWT_SECRET=10b1346b75e107cc522ee6ad440d409e
+      - MONGO_CONNECTION_STRING=mongodb://mongo:27017/craft-folio-gotchi
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
+    depends_on:
+      - mongo
     container_name: craft-folio-gotchi-api
+  mongo:
+    image: mongo:3.6
+    expose:
+      - "27017"
+    ports:
+      - "27017:27017"
+    container_name: craft-folio-gotchi-mongo
