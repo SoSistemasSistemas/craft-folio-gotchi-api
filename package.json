@@ -1,0 +1,42 @@
+{
+  "name": "craft-folio-gotchi-api",
+  "version": "1.0.0",
+  "description": "API do sistema CraftFolioGotchi",
+  "main": "src/app.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SoSistemasSistemas/craft-folio-gotchi-api.git"
+  },
+  "keywords": [
+    "API",
+    "CraftFolioGotchi",
+    "REST"
+  ],
+  "author": "SoSistemasSistemas <https://github.com/SoSistemasSistemas>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SoSistemasSistemas/craft-folio-gotchi-api/issues"
+  },
+  "homepage": "https://github.com/SoSistemasSistemas/craft-folio-gotchi-api#readme",
+  "dependencies": {
+    "ava": "^0.25.0",
+    "body-parser": "^1.18.3",
+    "cors": "^2.8.4",
+    "eslint": "^4.19.1",
+    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-plugin-import": "^2.12.0",
+    "express": "^4.16.3",
+    "got": "^8.3.1",
+    "http-status-codes": "^1.3.0",
+    "jsonwebtoken": "^8.2.1",
+    "morgan": "^1.9.0",
+    "nodemon": "^1.17.4",
+    "parameters-middleware": "^0.1.0"
+  }
+}

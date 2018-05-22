@@ -1,0 +1,15 @@
+version: '3'
+services:
+  api:
+    build: .
+    command: ["npx", "nodemon", "-L", "--watch", "src", "src/app.js"]
+    ports:
+      - 3000:3000
+    environment:
+      - NODE_ENV=development
+      - API_PORT=3000
+      - JWT_SECRET=10b1346b75e107cc522ee6ad440d409e
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    container_name: craft-folio-gotchi-api
