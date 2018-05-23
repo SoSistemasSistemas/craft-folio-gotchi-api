@@ -1,5 +1,3 @@
-/* eslint-disable no-underscore-dangle */
-
 const test = require('ava');
 
 const internalRequest = require('../util/internalRequest.util');
@@ -16,27 +14,55 @@ let testUser = {
   password: '12345',
 };
 
+let testWorld;
+
 test.before(async () => {
-  const response = await internalRequest.post(`${API_AUTH_URL}`, testUser);
+  let response = await internalRequest.post(`${API_AUTH_URL}`, testUser);
   testUser = Object.assign(testUser, response.body);
+
+  testWorld = {
+    owner: {
+      _id: testUser._id,
+      email: testUser.email,
+    },
+    visitsCount: 5,
+    widgets: [{ type: 'outdoor' }],
+  };
+
+  const headers = { 'x-access-token': testUser.token || '' };
+  response = await internalRequest.post(`${API_WORLD_URL}`, testWorld, headers);
+  testWorld = Object.assign(testWorld, response.body);
 });
 
 test.after(async () => {
   const headers = { 'x-access-token': testUser.token || '' };
   await internalRequest.delete(`${API_USER_URL}/${testUser._id}`, headers);
+  await internalRequest.delete(`${API_WORLD_URL}/${testWorld._id}`, headers);
 });
 
 test.afterEach(async (t) => {
-  const { user } = t.context;
+  const { world } = t.context;
 
-  if (t.context.user) {
-    const headers = { 'x-access-token': user.token || '' };
-    await internalRequest.delete(`${API_USER_URL}/${user._id}`, headers);
+  if (world) {
+    const headers = { 'x-access-token': testUser.token || '' };
+    await internalRequest.delete(`${API_WORLD_URL}/${world._id}`, headers);
   }
 });
 
-test.todo('List all worlds not authenticated');
-test.todo('List all worlds');
+test('List all worlds not authenticated', async (t) => {
+  const response = await internalRequest.get(`${API_WORLD_URL}/`);
+
+  t.is(response.statusCode, UNAUTHORIZED);
+  t.is(response.body.error, USER_NOT_AUTHENTICATED);
+});
+test('List all worlds', async (t) => {
+  const headers = { 'x-access-token': testUser.token || '' };
+  const response = await internalRequest.get(`${API_WORLD_URL}/`, headers);
+  const { statusCode, body } = response;
+
+  t.is(statusCode, OK);
+  t.true(Array.isArray(body));
+});
 
 test.todo('Get world not authenticated');
 test.todo('Get not registred world');

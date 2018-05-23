@@ -11,7 +11,7 @@ module.exports = (req, res, next) => {
       if (!world) {
         return res.status(NOT_FOUND).json(world);
       }
-      if (world.owner._id !== req.user._id) {
+      if (world.owner._id.toString() !== req.user._id.toString()) {
         return res.status(UNAUTHORIZED).json({ error: WORLD_OWNERSHIP_REQUIRED });
       }
 

@@ -49,15 +49,17 @@ router
   .post(
     authentication,
     (req, res) => {
-      const { user, widgets } = req;
+      const { user, body } = req;
+      const { widgets, visitsCount } = body;
       const owner = {
-        _id: user.id,
+        _id: user._id,
         email: user.email,
       };
 
       const world = new World();
       world.owner = owner;
       world.widgets = widgets || [];
+      world.visitsCount = visitsCount || 0;
 
       world.save((error) => {
         if (error) return res.status(INTERNAL_SERVER_ERROR).json({ error });
