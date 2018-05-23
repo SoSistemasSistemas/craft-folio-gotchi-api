@@ -64,9 +64,26 @@ test('List all worlds', async (t) => {
   t.true(Array.isArray(body));
 });
 
-test.todo('Get world not authenticated');
-test.todo('Get not registred world');
-test.todo('Get world');
+test('Get world not authenticated', async (t) => {
+  const response = await internalRequest.get(`${API_WORLD_URL}/${testWorld._id}`);
+
+  t.is(response.statusCode, UNAUTHORIZED);
+  t.is(response.body.error, USER_NOT_AUTHENTICATED);
+});
+test('Get not registred world', async (t) => {
+  const headers = { 'x-access-token': testUser.token || '' };
+  const response = await internalRequest.get(`${API_WORLD_URL}/5af7aed5992f2e3dd7be54e6`, headers);
+
+  t.is(response.statusCode, NOT_FOUND);
+  t.falsy(response.body);
+});
+test('Get world', async (t) => {
+  const headers = { 'x-access-token': testUser.token || '' };
+  const response = await internalRequest.get(`${API_WORLD_URL}/${testWorld._id}`, headers);
+
+  t.is(response.statusCode, OK);
+  t.truthy(response.body);
+});
 
 test.todo('Create world not authenticated');
 test.todo('Create world');
