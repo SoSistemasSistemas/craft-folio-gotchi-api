@@ -1,7 +1,5 @@
 const express = require('express');
-const {
-  OK, BAD_REQUEST, INTERNAL_SERVER_ERROR, NOT_FOUND,
-} = require('http-status-codes');
+const { OK, INTERNAL_SERVER_ERROR, NOT_FOUND } = require('http-status-codes');
 
 const World = require('../models/world.model');
 
@@ -19,7 +17,7 @@ router
 
       World.findOne({ _id })
         .then(world => (world ? res.status(OK).json(world) : res.status(NOT_FOUND).json(world)))
-        .catch(error => res.status(BAD_REQUEST).json({ error }));
+        .catch(error => res.status(INTERNAL_SERVER_ERROR).json({ error }));
     },
   )
   .delete(
@@ -32,7 +30,7 @@ router
 
       World.remove({ _id })
         .then(() => res.status(OK).json())
-        .catch(error => res.status(BAD_REQUEST).json({ error }));
+        .catch(error => res.status(INTERNAL_SERVER_ERROR).json({ error }));
     },
   );
 

@@ -1,7 +1,5 @@
 const express = require('express');
-const {
-  OK, BAD_REQUEST, INTERNAL_SERVER_ERROR, NOT_FOUND,
-} = require('http-status-codes');
+const { OK, INTERNAL_SERVER_ERROR, NOT_FOUND } = require('http-status-codes');
 
 const User = require('../models/user.model');
 
@@ -18,7 +16,7 @@ router
 
       User.findOne({ _id }, { password: 0 })
         .then(user => (user ? res.status(OK).json(user) : res.status(NOT_FOUND).json(user)))
-        .catch(error => res.status(BAD_REQUEST).json({ error }));
+        .catch(error => res.status(INTERNAL_SERVER_ERROR).json({ error }));
     },
   )
   .delete(
@@ -28,7 +26,7 @@ router
 
       User.remove({ _id })
         .then(() => res.status(OK).json())
-        .catch(error => res.status(BAD_REQUEST).json({ error }));
+        .catch(error => res.status(INTERNAL_SERVER_ERROR).json({ error }));
     },
   );
 

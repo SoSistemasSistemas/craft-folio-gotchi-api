@@ -55,7 +55,7 @@ test('List all worlds not authenticated', async (t) => {
   t.is(response.statusCode, UNAUTHORIZED);
   t.is(response.body.error, USER_NOT_AUTHENTICATED);
 });
-test('List all worlds', async (t) => {
+test('List all worlds successfully', async (t) => {
   const headers = { 'x-access-token': testUser.token || '' };
   const response = await internalRequest.get(`${API_WORLD_URL}/`, headers);
   const { statusCode, body } = response;
@@ -77,7 +77,7 @@ test('Get not registred world', async (t) => {
   t.is(response.statusCode, NOT_FOUND);
   t.falsy(response.body);
 });
-test('Get world', async (t) => {
+test('Get world successfully', async (t) => {
   const headers = { 'x-access-token': testUser.token || '' };
   const response = await internalRequest.get(`${API_WORLD_URL}/${testWorld._id}`, headers);
 
@@ -85,13 +85,18 @@ test('Get world', async (t) => {
   t.truthy(response.body);
 });
 
-test.todo('Create world not authenticated');
-test.todo('Create world');
+test('Create world not authenticated', async (t) => {
+  const response = await internalRequest.post(`${API_WORLD_URL}`, {});
+
+  t.is(response.statusCode, UNAUTHORIZED);
+  t.is(response.body.error, USER_NOT_AUTHENTICATED);
+});
+test.todo('Create world successfully');
 
 test.todo('Update world not authenticated');
 test.todo('Update world without ownership');
-test.todo('Delete world');
+test.todo('Delete world ');
 
 test.todo('Delete world not authenticated');
 test.todo('Delete world without ownership');
-test.todo('Delete world');
+test.todo('Delete world successfully');
