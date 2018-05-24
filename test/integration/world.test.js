@@ -73,7 +73,7 @@ test('Get world successfully', async (t) => {
   const response = await internalRequest.get(`${API_WORLD_URL}/${world._id}`, headers);
   const { statusCode, body } = response;
 
-  const testWorld = Object.assign({}, world);
+  const testWorld = JSON.parse(JSON.stringify(world));
   delete testWorld.owner.token;
 
   t.is(statusCode, OK);
