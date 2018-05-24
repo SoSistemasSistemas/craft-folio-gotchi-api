@@ -1,5 +1,7 @@
 const express = require('express');
-const { OK, INTERNAL_SERVER_ERROR, NOT_FOUND } = require('http-status-codes');
+const {
+  OK, INTERNAL_SERVER_ERROR, NOT_FOUND, CREATED, NO_CONTENT,
+} = require('http-status-codes');
 
 const World = require('../models/world.model');
 
@@ -29,7 +31,7 @@ router
       const { _id } = req.params;
 
       World.remove({ _id })
-        .then(() => res.status(OK).json())
+        .then(() => res.status(NO_CONTENT).json())
         .catch(error => res.status(INTERNAL_SERVER_ERROR).json({ error }));
     },
   );
@@ -62,7 +64,7 @@ router
       world.save((error) => {
         if (error) return res.status(INTERNAL_SERVER_ERROR).json({ error });
 
-        res.status(OK).json(world);
+        res.status(CREATED).json(world);
       });
     },
   );

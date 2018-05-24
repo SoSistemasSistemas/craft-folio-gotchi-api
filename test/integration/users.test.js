@@ -4,7 +4,9 @@ const test = require('ava');
 
 const internalRequest = require('../util/internalRequest.util');
 
-const { OK, UNAUTHORIZED, NOT_FOUND } = require('http-status-codes');
+const {
+  OK, UNAUTHORIZED, NOT_FOUND, NO_CONTENT,
+} = require('http-status-codes');
 const { USER_NOT_AUTHENTICATED } = require('../../src/constants/message.constant');
 
 const API_AUTH_URL = 'http://localhost:3000/auth';
@@ -73,14 +75,15 @@ test('Get user', async (t) => {
 });
 test('Delete user', async (t) => {
   const headers = { 'x-access-token': testUser.token || '' };
-  let response = await internalRequest.get(`${API_USER_URL}/${testUser._id}`, headers);
 
+  let response = await internalRequest.get(`${API_USER_URL}/${testUser._id}`, headers);
   t.is(response.statusCode, OK);
   t.truthy(response.body);
 
-  await internalRequest.delete(`${API_USER_URL}/${testUser._id}`, headers);
-  response = await internalRequest.get(`${API_USER_URL}/${testUser._id}`, headers);
+  response = await internalRequest.delete(`${API_USER_URL}/${testUser._id}`, headers);
+  t.is(response.statusCode, NO_CONTENT);
 
+  response = await internalRequest.get(`${API_USER_URL}/${testUser._id}`, headers);
   t.is(response.statusCode, NOT_FOUND);
   t.falsy(response.body);
 });

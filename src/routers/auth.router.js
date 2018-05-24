@@ -1,7 +1,7 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const parameters = require('parameters-middleware');
-const { ACCEPTED, BAD_REQUEST, OK } = require('http-status-codes');
+const { CREATED, BAD_REQUEST, OK } = require('http-status-codes');
 
 const User = require('../models/user.model');
 const encryptionService = require('../services/encryption.service');
@@ -67,7 +67,7 @@ router
       validateCreationOfUserAlreadyRegistred(email)
         .then(() => registerNewUser(email, password))
         .then(user => attachJsonWebToken(user))
-        .then(response => res.status(ACCEPTED).json(response))
+        .then(response => res.status(CREATED).json(response))
         .catch(error => res.status(BAD_REQUEST).json({ error: error.message }));
     },
   );

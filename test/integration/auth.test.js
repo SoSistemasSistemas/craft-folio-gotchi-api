@@ -4,7 +4,7 @@ const test = require('ava');
 
 const internalRequest = require('../util/internalRequest.util');
 
-const { BAD_REQUEST, OK, ACCEPTED } = require('http-status-codes');
+const { BAD_REQUEST, OK, CREATED } = require('http-status-codes');
 const { REQUIRED_PARAMETERS_ERROR_MESSAGE } = require('../../src/constants/message.constant');
 
 const API_AUTH_URL = 'http://localhost:3000/auth';
@@ -99,7 +99,7 @@ test('Signup successfully', async (t) => {
 
   t.context.user = body;
 
-  t.is(statusCode, ACCEPTED);
+  t.is(statusCode, CREATED);
   t.is(body.email, email);
   t.falsy(body.password);
   t.truthy(body._id);

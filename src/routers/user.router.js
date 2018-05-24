@@ -1,5 +1,7 @@
 const express = require('express');
-const { OK, INTERNAL_SERVER_ERROR, NOT_FOUND } = require('http-status-codes');
+const {
+  OK, INTERNAL_SERVER_ERROR, NOT_FOUND, NO_CONTENT,
+} = require('http-status-codes');
 
 const User = require('../models/user.model');
 
@@ -25,7 +27,7 @@ router
       const { _id } = req.params;
 
       User.remove({ _id })
-        .then(() => res.status(OK).json())
+        .then(() => res.status(NO_CONTENT).json())
         .catch(error => res.status(INTERNAL_SERVER_ERROR).json({ error }));
     },
   );
