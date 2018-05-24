@@ -21,5 +21,8 @@ exports.createRandomWorld = async () => {
   const headers = { 'x-access-token': owner.token || '' };
   const response = await internalRequest.post(`${API_WORLD_URL}`, {}, headers);
 
-  return { world: response.body, ownerToken: owner.token };
+  const world = response.body;
+  world.owner.token = owner.token;
+
+  return world;
 };
