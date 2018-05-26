@@ -11,7 +11,7 @@ const API_AUTH_URL = 'http://localhost:3000/auth';
 const API_USER_URL = 'http://localhost:3000/users';
 
 let testUser = {
-  email: '__test__@craftfoliogotchi.com',
+  username: '__test__',
   password: '12345',
 };
 
@@ -34,7 +34,7 @@ test.afterEach(async (t) => {
   }
 });
 
-test('Login without email field', async (t) => {
+test('Login without username field', async (t) => {
   const { password } = testUser;
   const response = await internalRequest.post(`${API_AUTH_URL}/login`, { password });
 
@@ -42,17 +42,17 @@ test('Login without email field', async (t) => {
   t.is(response.body, REQUIRED_PARAMETERS_ERROR_MESSAGE);
 });
 test('Login without password field', async (t) => {
-  const { email } = testUser;
-  const response = await internalRequest.post(`${API_AUTH_URL}/login`, { email });
+  const { username } = testUser;
+  const response = await internalRequest.post(`${API_AUTH_URL}/login`, { username });
 
   t.is(response.statusCode, BAD_REQUEST);
   t.is(response.body, REQUIRED_PARAMETERS_ERROR_MESSAGE);
 });
 test('Login credentials invalid', async (t) => {
-  const { email } = testUser;
+  const { username } = testUser;
   const password = '123456';
 
-  const response = await internalRequest.post(`${API_AUTH_URL}/login`, { email, password });
+  const response = await internalRequest.post(`${API_AUTH_URL}/login`, { username, password });
 
   t.is(response.statusCode, BAD_REQUEST);
   t.is(response.body.error, 'Senha incorreta.');
@@ -64,13 +64,13 @@ test('Login successfully', async (t) => {
   t.context.user = body;
 
   t.is(statusCode, OK);
-  t.is(body.email, testUser.email);
+  t.is(body.username, testUser.username);
   t.falsy(body.password);
   t.truthy(body._id);
   t.truthy(body.token);
 });
 
-test('Signup without email field', async (t) => {
+test('Signup without username field', async (t) => {
   const password = '12345';
   const response = await internalRequest.post(`${API_AUTH_URL}`, { password });
 
@@ -78,8 +78,8 @@ test('Signup without email field', async (t) => {
   t.is(response.body, REQUIRED_PARAMETERS_ERROR_MESSAGE);
 });
 test('Signup without password field', async (t) => {
-  const email = '__test2__@craftfoliogotchi.com';
-  const response = await internalRequest.post(`${API_AUTH_URL}`, { email });
+  const username = '__test2__@craftfoliogotchi.com';
+  const response = await internalRequest.post(`${API_AUTH_URL}`, { username });
 
   t.is(response.statusCode, BAD_REQUEST);
   t.is(response.body, REQUIRED_PARAMETERS_ERROR_MESSAGE);
@@ -91,16 +91,16 @@ test('Signup with e-mail already registred', async (t) => {
   t.is(response.body.error, 'E-mail já cadastrado na base.');
 });
 test('Signup successfully', async (t) => {
-  const email = '__test2__@craftfoliogotchi.com';
+  const username = '__test2__';
   const password = '12345';
 
-  const response = await internalRequest.post(`${API_AUTH_URL}`, { email, password });
+  const response = await internalRequest.post(`${API_AUTH_URL}`, { username, password });
   const { statusCode, body } = response;
 
   t.context.user = body;
 
   t.is(statusCode, CREATED);
-  t.is(body.email, email);
+  t.is(body.username, username);
   t.falsy(body.password);
   t.truthy(body._id);
   t.truthy(body.token);

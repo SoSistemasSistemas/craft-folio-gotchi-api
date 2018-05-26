@@ -53,7 +53,7 @@ router
       const { widgets, visitsCount } = body;
       const owner = {
         _id: user._id,
-        email: user.email,
+        username: user.username,
       };
 
       const world = new World();

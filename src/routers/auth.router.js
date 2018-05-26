@@ -12,9 +12,9 @@ const router = express.Router();
 
 const { JWT_SECRET } = process.env;
 
-function validateCreationOfUserAlreadyRegistred(email) {
+function validateCreationOfUserAlreadyRegistred(username) {
   return new Promise((resolve, reject) => {
-    User.findOne({ email })
+    User.findOne({ username })
       .then((user) => {
         if (user) return reject(new Error('E-mail já cadastrado na base.'));
         resolve();
@@ -22,10 +22,10 @@ function validateCreationOfUserAlreadyRegistred(email) {
   });
 }
 
-function registerNewUser(email, password) {
+function registerNewUser(username, password) {
   return new Promise(async (resolve, reject) => {
     let newUser = new User({
-      email,
+      username,
       password: await encryptionService.cryptPassword(password),
     });
 
@@ -61,11 +61,11 @@ function attachJsonWebToken(user) {
 router
   .route('/')
   .post(
-    parameters({ body: ['email', 'password'] }, { message: REQUIRED_PARAMETERS_ERROR_MESSAGE }),
+    parameters({ body: ['username', 'password'] }, { message: REQUIRED_PARAMETERS_ERROR_MESSAGE }),
     (req, res) => {
-      const { email, password } = req.body;
-      validateCreationOfUserAlreadyRegistred(email)
-        .then(() => registerNewUser(email, password))
+      const { username, password } = req.body;
+      validateCreationOfUserAlreadyRegistred(username)
+        .then(() => registerNewUser(username, password))
         .then(user => attachJsonWebToken(user))
         .then(response => res.status(CREATED).json(response))
         .catch(error => res.status(BAD_REQUEST).json({ error: error.message }));
@@ -75,12 +75,12 @@ router
 router
   .route('/login')
   .post(
-    parameters({ body: ['email', 'password'] }, { message: REQUIRED_PARAMETERS_ERROR_MESSAGE }),
+    parameters({ body: ['username', 'password'] }, { message: REQUIRED_PARAMETERS_ERROR_MESSAGE }),
     (req, res) => {
-      const { email, password } = req.body;
+      const { username, password } = req.body;
 
       User
-        .findOne({ email })
+        .findOne({ username })
         .then(user => validateUserPassword(user, password))
         .then(user => attachJsonWebToken(user))
         .then(response => res.status(OK).json(response))

@@ -7,7 +7,7 @@ const random = limit => Math.floor(Math.random() * limit, 0);
 
 exports.createRandomUser = async () => {
   const user = {
-    email: `__test_world_${random(1000)}__@craftfoliogotchi.com`,
+    username: `__test_world_${random(1000)}__`,
     password: `${random(100000)}`,
   };
 

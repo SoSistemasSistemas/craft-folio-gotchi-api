@@ -13,7 +13,7 @@ const API_AUTH_URL = 'http://localhost:3000/auth';
 const API_USER_URL = 'http://localhost:3000/users';
 
 let testUser = {
-  email: '__test_user__@craftfoliogotchi.com',
+  username: '__test_user__',
   password: '12345',
 };
 

@@ -8,7 +8,7 @@ const avatarSchema = new Schema({
 }, { versionKey: false });
 
 const userSchema = new Schema({
-  email: String,
+  username: String,
   password: String,
   idWorld: Schema.Types.ObjectId,
   avatar: avatarSchema,
