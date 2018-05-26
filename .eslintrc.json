@@ -9,6 +9,7 @@
     "consistent-return": "off",
     "no-shadow": "off",
     "no-param-reassign": "off",
-    "no-underscore-dangle": "off"
+    "no-underscore-dangle": "off",
+    "no-throw-literal": "off"
   }
 }

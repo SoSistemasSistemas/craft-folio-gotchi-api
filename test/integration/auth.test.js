@@ -5,7 +5,9 @@ const test = require('ava');
 const internalRequest = require('../util/internalRequest.util');
 
 const { BAD_REQUEST, OK, CREATED } = require('http-status-codes');
-const { REQUIRED_PARAMETERS_ERROR_MESSAGE } = require('../../src/constants/message.constant');
+const {
+  REQUIRED_PARAMETERS_ERROR_MESSAGE, WRONG_PASSWORD, USER_ALREADY_REGISTRED,
+} = require('../../src/constants/message.constant');
 
 const API_AUTH_URL = 'http://localhost:3000/auth';
 const API_USER_URL = 'http://localhost:3000/users';
@@ -55,7 +57,7 @@ test('Login credentials invalid', async (t) => {
   const response = await internalRequest.post(`${API_AUTH_URL}/login`, { username, password });
 
   t.is(response.statusCode, BAD_REQUEST);
-  t.is(response.body.error, 'Senha incorreta.');
+  t.is(response.body.error, WRONG_PASSWORD);
 });
 test('Login successfully', async (t) => {
   const response = await internalRequest.post(`${API_AUTH_URL}/login`, testUser);
@@ -88,7 +90,7 @@ test('Signup with e-mail already registred', async (t) => {
   const response = await internalRequest.post(`${API_AUTH_URL}`, testUser);
 
   t.is(response.statusCode, BAD_REQUEST);
-  t.is(response.body.error, 'E-mail já cadastrado na base.');
+  t.is(response.body.error, USER_ALREADY_REGISTRED);
 });
 test('Signup successfully', async (t) => {
   const username = '__test2__';

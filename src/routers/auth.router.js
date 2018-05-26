@@ -1,12 +1,17 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const parameters = require('parameters-middleware');
-const { CREATED, BAD_REQUEST, OK } = require('http-status-codes');
+const {
+  CREATED, BAD_REQUEST, OK, NOT_FOUND,
+} = require('http-status-codes');
 
 const User = require('../models/user.model');
 const encryptionService = require('../services/encryption.service');
 
-const { REQUIRED_PARAMETERS_ERROR_MESSAGE } = require('../constants/message.constant');
+const {
+  REQUIRED_PARAMETERS_ERROR_MESSAGE, USER_NOT_FOUND, WRONG_PASSWORD, GENERATE_TOKEN_ERROR,
+  USER_ALREADY_REGISTRED,
+} = require('../constants/message.constant');
 
 const router = express.Router();
 
@@ -16,7 +21,7 @@ function validateCreationOfUserAlreadyRegistred(username) {
   return new Promise((resolve, reject) => {
     User.findOne({ username })
       .then((user) => {
-        if (user) return reject(new Error('E-mail já cadastrado na base.'));
+        if (user) return reject(new Error(USER_ALREADY_REGISTRED));
         resolve();
       });
   });
@@ -39,11 +44,19 @@ function registerNewUser(username, password) {
   });
 }
 
-function validateUserPassword(user, informedPassword) {
+function validateUser(user) {
+  if (!user) {
+    throw { message: USER_NOT_FOUND, httpStatusCode: NOT_FOUND };
+  }
+
+  return user;
+}
+
+function validatePassword(user, informedPassword) {
   return encryptionService
     .comparePassword(informedPassword, user.password)
     .then((isMatch) => {
-      if (!isMatch) throw new Error('Senha incorreta.');
+      if (!isMatch) throw new Error(WRONG_PASSWORD);
 
       const response = user.toObject();
       delete response.password;
@@ -54,7 +67,7 @@ function validateUserPassword(user, informedPassword) {
 function attachJsonWebToken(user) {
   const token = jwt.sign(user, JWT_SECRET, { expiresIn: '1d' });
 
-  if (!token) throw new Error('Falha ao gerar token de autenticação.');
+  if (!token) throw new Error(GENERATE_TOKEN_ERROR);
   return { ...user, token };
 }
 
@@ -81,10 +94,12 @@ router
 
       User
         .findOne({ username })
-        .then(user => validateUserPassword(user, password))
+        .then(user => validateUser(user))
+        .then(user => validatePassword(user, password))
         .then(user => attachJsonWebToken(user))
         .then(response => res.status(OK).json(response))
-        .catch(error => res.status(BAD_REQUEST).json({ error: error.message }));
+        .catch(error =>
+          res.status(error.httpStatusCode || BAD_REQUEST).json({ error: error.message }));
     },
   );
 
