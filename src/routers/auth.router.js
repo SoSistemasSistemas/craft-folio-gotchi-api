@@ -10,7 +10,7 @@ const encryptionService = require('../services/encryption.service');
 
 const {
   REQUIRED_PARAMETERS_ERROR_MESSAGE, USER_NOT_FOUND, WRONG_PASSWORD, GENERATE_TOKEN_ERROR,
-  USER_ALREADY_REGISTRED,
+  USER_ALREADY_REGISTRED, WRONG_PASSWORD_CONFIRMATION,
 } = require('../constants/message.constant');
 
 const router = express.Router();
@@ -64,6 +64,14 @@ function validatePassword(user, informedPassword) {
     });
 }
 
+function validatePasswordConfirmation(password, passwordConfirmation) {
+  if (password !== passwordConfirmation) {
+    throw new Error(WRONG_PASSWORD_CONFIRMATION);
+  }
+
+  return true;
+}
+
 function attachJsonWebToken(user) {
   const token = jwt.sign(user, JWT_SECRET, { expiresIn: '1d' });
 
@@ -74,10 +82,11 @@ function attachJsonWebToken(user) {
 router
   .route('/')
   .post(
-    parameters({ body: ['username', 'password'] }, { message: REQUIRED_PARAMETERS_ERROR_MESSAGE }),
+    parameters({ body: ['username', 'password', 'confirmPassword'] }, { message: REQUIRED_PARAMETERS_ERROR_MESSAGE }),
     (req, res) => {
-      const { username, password } = req.body;
+      const { username, password, confirmPassword } = req.body;
       validateCreationOfUserAlreadyRegistred(username)
+        .then(() => validatePasswordConfirmation(password, confirmPassword))
         .then(() => registerNewUser(username, password))
         .then(user => attachJsonWebToken(user))
         .then(response => res.status(CREATED).json(response))
