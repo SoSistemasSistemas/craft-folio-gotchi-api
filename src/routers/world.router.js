@@ -11,13 +11,13 @@ const worldOwnership = require('../middlewares/worldOwnership.middleware');
 const router = express.Router();
 
 router
-  .route('/:_id')
+  .route('/:ownerUsername')
   .get(
     authentication,
     (req, res) => {
-      const { _id } = req.params;
+      const { ownerUsername } = req.params;
 
-      World.findOne({ _id })
+      World.findOne({ 'owner.username': ownerUsername })
         .then(world => (world ? res.status(OK).json(world) : res.status(NOT_FOUND).json(world)))
         .catch(error => res.status(INTERNAL_SERVER_ERROR).json({ error }));
     },
@@ -28,9 +28,9 @@ router
       worldOwnership,
     ],
     (req, res) => {
-      const { _id } = req.params;
+      const { ownerUsername } = req.params;
 
-      World.remove({ _id })
+      World.remove({ 'owner.username': ownerUsername })
         .then(() => res.status(NO_CONTENT).json())
         .catch(error => res.status(INTERNAL_SERVER_ERROR).json({ error }));
     },
