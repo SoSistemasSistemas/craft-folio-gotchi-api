@@ -8,6 +8,8 @@ const World = require('../models/world.model');
 const authentication = require('../middlewares/authentication.middleware');
 const worldOwnership = require('../middlewares/worldOwnership.middleware');
 
+const widgetService = require('../services/widget.service');
+
 const router = express.Router();
 
 router
@@ -58,7 +60,7 @@ router
 
       const world = new World();
       world.owner = owner;
-      world.widgets = widgets || [];
+      world.widgets = widgets || widgetService.getDefaultWidgets();
       world.visitsCount = visitsCount || 0;
 
       world.save((error) => {

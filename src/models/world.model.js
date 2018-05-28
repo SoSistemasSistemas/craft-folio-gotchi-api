@@ -7,13 +7,11 @@ const ownerSchema = new Schema({
   username: String,
 }, { versionKey: false });
 
-const widgetSchema = new Schema({
-  type: String,
-}, { versionKey: false, strict: false });
+const widgetSchema = new Schema({}, { _id: false, versionKey: false, strict: false });
 
 const worldSchema = new Schema({
   owner: { type: ownerSchema, required: true },
-  widgets: { type: [widgetSchema], default: [] },
+  widgets: { type: widgetSchema, default: {} },
   visitsCount: { type: Number, default: 0 },
 }, { collection: 'worlds', versionKey: false });
 
