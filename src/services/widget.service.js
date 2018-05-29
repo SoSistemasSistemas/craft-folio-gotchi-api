@@ -30,6 +30,10 @@ const console = {
   height: 60,
 };
 
+const signPlaque = {
+  text: 'Seja muito bem-vindo ao meu mundo!',
+};
+
 exports.getDefaultWidgets = () => ({
   skyTextures: skyTextures.map((url, index) => ({
     url,
@@ -41,4 +45,5 @@ exports.getDefaultWidgets = () => ({
   })),
   outdoor,
   console,
+  signPlaque,
 });
