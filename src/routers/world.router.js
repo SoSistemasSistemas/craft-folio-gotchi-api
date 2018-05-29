@@ -13,6 +13,22 @@ const widgetService = require('../services/widget.service');
 const router = express.Router();
 
 router
+  .route('/:ownerUsername/widgets')
+  .put(
+    [
+      authentication,
+      worldOwnership,
+    ],
+    (req, res) => {
+      const { ownerUsername } = req.params;
+
+      World.findOneAndUpdate({ 'owner.username': ownerUsername }, { widgets: { ...req.body } })
+        .then(world => (world ? res.status(OK).json(world) : res.status(NOT_FOUND).json(world)))
+        .catch(error => res.status(INTERNAL_SERVER_ERROR).json({ error }));
+    },
+  );
+
+router
   .route('/:ownerUsername')
   .get(
     authentication,
