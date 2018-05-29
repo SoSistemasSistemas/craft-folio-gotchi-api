@@ -4,10 +4,26 @@ const {
 } = require('http-status-codes');
 
 const User = require('../models/user.model');
+const World = require('../models/world.model');
 
 const authentication = require('../middlewares/authentication.middleware');
 
 const router = express.Router();
+
+router
+  .route('/:username/avatar')
+  .put(
+    authentication,
+    (req, res) => {
+      const { username } = req.params;
+      const { url } = req.body;
+
+      User.findOneAndUpdate({ username }, { 'avatar.url': url })
+        .then(() => World.findOneAndUpdate({ 'owner.username': username }, { 'owner.avatarUrl': url }))
+        .then(() => res.status(NO_CONTENT).json())
+        .catch(error => res.status(INTERNAL_SERVER_ERROR).json({ error }));
+    },
+  );
 
 router
   .route('/:_id')

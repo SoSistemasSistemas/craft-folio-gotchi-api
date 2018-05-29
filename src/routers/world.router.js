@@ -23,7 +23,7 @@ router
       const { ownerUsername } = req.params;
 
       World.findOneAndUpdate({ 'owner.username': ownerUsername }, { widgets: { ...req.body } })
-        .then(world => (world ? res.status(OK).json(world) : res.status(NOT_FOUND).json(world)))
+        .then(() => res.status(NO_CONTENT).json())
         .catch(error => res.status(INTERNAL_SERVER_ERROR).json({ error }));
     },
   );
@@ -72,7 +72,7 @@ router
       const owner = {
         _id: user._id,
         username: user.username,
-        avatar: user.avatar,
+        avatarUrl: user.avatar.url,
       };
 
       const world = new World();
