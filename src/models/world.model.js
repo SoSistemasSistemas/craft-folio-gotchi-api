@@ -5,7 +5,7 @@ const { Schema } = mongoose;
 const ownerSchema = new Schema({
   _id: Schema.Types.ObjectId,
   username: String,
-}, { versionKey: false });
+}, { strict: false, versionKey: false });
 
 const widgetSchema = new Schema({}, { _id: false, versionKey: false, strict: false });
 

@@ -7,6 +7,7 @@ const {
 
 const User = require('../models/user.model');
 const encryptionService = require('../services/encryption.service');
+const avatarService = require('../services/avatar.service');
 
 const {
   REQUIRED_PARAMETERS_ERROR_MESSAGE, USER_NOT_FOUND, WRONG_PASSWORD, GENERATE_TOKEN_ERROR,
@@ -32,6 +33,9 @@ function registerNewUser(username, password) {
     let newUser = new User({
       username,
       password: await encryptionService.cryptPassword(password),
+      avatar: {
+        url: avatarService.getRandom(),
+      },
     });
 
     newUser.save((err) => {

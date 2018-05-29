@@ -3,9 +3,9 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const avatarSchema = new Schema({
-  bodyUrl: String,
+  url: String,
   state: String,
-}, { versionKey: false });
+}, { _id: false, versionKey: false });
 
 const userSchema = new Schema({
   username: String,
