@@ -6,6 +6,7 @@ const morgan = require('morgan');
 const app = express();
 const { API_PORT } = process.env;
 
+const avatarRouter = require('./routers/avatar.router');
 const authRouter = require('./routers/auth.router');
 const userRouter = require('./routers/user.router');
 const worldRouter = require('./routers/world.router');
@@ -17,6 +18,7 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
+app.use('/avatars', avatarRouter);
 app.use('/auth', authRouter);
 app.use('/users', userRouter);
 app.use('/worlds', worldRouter);

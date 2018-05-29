@@ -58,7 +58,7 @@ router
         username: user.username,
         avatar: user.avatar,
       };
-      console.log(owner);
+
       const world = new World();
       world.owner = owner;
       world.widgets = widgets || widgetService.getDefaultWidgets();
