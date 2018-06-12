@@ -11,9 +11,11 @@ const authRouter = require('./routers/auth.router');
 const userRouter = require('./routers/user.router');
 const worldRouter = require('./routers/world.router');
 
+const { BAD_REQUEST } = require('http-status-codes');
+
 require('./config/database.config');
 
-app.use(morgan('combined'));
+app.use(morgan('combined', { skip: (_, res) => res.statusCode < BAD_REQUEST }));
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
