@@ -1,6 +1,6 @@
 const express = require('express');
 const {
-  OK, INTERNAL_SERVER_ERROR, NOT_FOUND, CREATED, NO_CONTENT,
+  OK, INTERNAL_SERVER_ERROR, NOT_FOUND, CREATED, NO_CONTENT, FORBIDDEN
 } = require('http-status-codes');
 
 const World = require('../models/world.model');
@@ -22,9 +22,15 @@ router
     (req, res) => {
       const { ownerUsername } = req.params;
 
-      World.findOneAndUpdate({ 'owner.username': ownerUsername }, { widgets: { ...req.body } })
-        .then(() => res.status(NO_CONTENT).json())
-        .catch(error => res.status(INTERNAL_SERVER_ERROR).json({ error }));
+      if (req.user.username === ownerUsername) {
+
+        World.findOneAndUpdate({ 'owner.username': ownerUsername }, { widgets: { ...req.body } })
+          .then(() => res.status(NO_CONTENT).json())
+          .catch(error => res.status(INTERNAL_SERVER_ERROR).json({ error }));
+
+      } else {
+        res.status(FORBIDDEN).json();
+      }
     },
   );
 
