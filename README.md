@@ -14,7 +14,6 @@ A aplicação está publicada na nuvem e pode ser acessada [aqui](http://35.184.
 ## Como rodar aplicação local
 
 ```shell
-npm install
-npm run bundle
-API_PORT=8001 node src/app.js
+$ npm install
+$ API_PORT=3000 MONGO_CONNECTION_STRING='mongodb://{mongo_host}/craft-folio-gotchi' JWT_SECRET=10b1346b75e107cc522ee6ad440d409e node src/app.js
 ```
