@@ -40,6 +40,7 @@
     "mongoose": "^5.1.2",
     "morgan": "^1.9.0",
     "nodemon": "^1.17.4",
-    "parameters-middleware": "^0.1.0"
+    "parameters-middleware": "^0.1.0",
+    "socket.io": "^2.1.1"
   }
 }

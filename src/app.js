@@ -29,6 +29,18 @@ app.use('/', (_, res) => {
   res.json({ msg: 'Hello from CraftFolioGotchi API!' });
 });
 
-app.listen(parseInt(API_PORT, 10), () => {
+const server = app.listen(parseInt(API_PORT, 10), () => {
   console.log(`CraftFolioGotchiAPI up and running at 0.0.0.0:${API_PORT}... :)`);
+});
+
+const io = require('socket.io')(server);
+
+io.on('connection', (socket) => {
+
+  console.log('socket connected');
+
+  socket.on('moved', (msg) => {
+    console.log('message: ' + msg);
+  });
+
 });
