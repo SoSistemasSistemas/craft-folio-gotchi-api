@@ -37,10 +37,13 @@ const io = require('socket.io')(server);
 
 io.on('connection', (socket) => {
 
-  console.log('socket connected');
+  console.log('Socket connected');
 
-  socket.on('moved', (msg) => {
-    console.log('message: ' + msg);
+  socket.on('moved', (data) => {
+    io.emit('moved', data);
   });
 
+  socket.on('jumped', (data) => {
+    io.emit('jumped', data);
+  });
 });
