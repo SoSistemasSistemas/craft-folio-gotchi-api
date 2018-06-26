@@ -36,9 +36,6 @@ const server = app.listen(parseInt(API_PORT, 10), () => {
 const io = require('socket.io')(server);
 
 io.on('connection', (socket) => {
-
-  console.log('Socket connected');
-
   socket.on('moved', (data) => {
     io.emit('moved', data);
   });

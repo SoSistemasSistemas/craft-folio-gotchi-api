@@ -1,0 +1,33 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: craft-folio-gotchi-api
+  labels:
+    name: craft-folio-gotchi-api
+spec:
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        name: craft-folio-gotchi-api
+    spec:
+      containers:
+      - name: craft-folio-gotchi-api
+        image: gcr.io/craft-folio-gotchi-207711/api:latest
+        resources:
+          requests:
+            cpu: "50m"
+          limits:
+            cpu: "150m"
+        ports:
+        - containerPort: 3000
+          name: http
+        env:
+        - name: NODE_ENV
+          value: production
+        - name: API_PORT
+          value: '3000'
+        - name: MONGO_CONNECTION_STRING
+          value: mongodb://craft-folio-gotchi-mongo:27017/craft-folio-gotchi
+        - name: JWT_SECRET
+          value: 10b1346b75e107cc522ee6ad440d409e
