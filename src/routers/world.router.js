@@ -1,6 +1,6 @@
 const express = require('express');
 const {
-  OK, INTERNAL_SERVER_ERROR, NOT_FOUND, CREATED, NO_CONTENT, FORBIDDEN
+  OK, INTERNAL_SERVER_ERROR, NOT_FOUND, CREATED, NO_CONTENT,
 } = require('http-status-codes');
 
 const World = require('../models/world.model');
@@ -22,17 +22,28 @@ router
     (req, res) => {
       const { ownerUsername } = req.params;
 
-      if (req.user.username === ownerUsername) {
-
-        World.findOneAndUpdate({ 'owner.username': ownerUsername }, { widgets: { ...req.body } })
-          .then(() => res.status(NO_CONTENT).json())
-          .catch(error => res.status(INTERNAL_SERVER_ERROR).json({ error }));
-
-      } else {
-        res.status(FORBIDDEN).json();
-      }
+      World
+        .findOneAndUpdate({ 'owner.username': ownerUsername }, { widgets: { ...req.body } })
+        .then(() => res.status(NO_CONTENT).json())
+        .catch(error => res.status(INTERNAL_SERVER_ERROR).json({ error }));
     },
   );
+
+const addVisitor = (world, visitor) => {
+  const alreadyVisitor = world.visitors.map(v => v.username).includes(visitor.username);
+
+  if (visitor.username !== world.owner.username && !alreadyVisitor) {
+    world.visitors.push({
+      _id: visitor._id,
+      username: visitor.username,
+      avatar: visitor.avatar,
+    });
+
+    return world.save().then(() => world);
+  }
+
+  return world;
+};
 
 router
   .route('/:ownerUsername')
@@ -42,6 +53,7 @@ router
       const { ownerUsername } = req.params;
 
       World.findOne({ 'owner.username': ownerUsername })
+        .then(world => addVisitor(world, req.user))
         .then(world => (world ? res.status(OK).json(world) : res.status(NOT_FOUND).json(world)))
         .catch(error => res.status(INTERNAL_SERVER_ERROR).json({ error }));
     },
