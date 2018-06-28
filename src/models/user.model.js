@@ -10,6 +10,7 @@ const avatarSchema = new Schema({
 const userSchema = new Schema({
   username: String,
   password: String,
+  webPushToken: String,
   idWorld: Schema.Types.ObjectId,
   avatar: avatarSchema,
 }, { collection: 'users', versionKey: false });
