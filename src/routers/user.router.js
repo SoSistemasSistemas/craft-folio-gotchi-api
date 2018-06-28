@@ -26,6 +26,20 @@ router
   );
 
 router
+  .route('/:username/tokenWebPush')
+  .put(
+    authentication,
+    (req, res) => {
+      const { username } = req.params;
+      const { token } = req.body;
+
+      User.findOneAndUpdate({ username }, { webPushToken: token })
+        .then(() => res.status(NO_CONTENT).json())
+        .catch(error => res.status(INTERNAL_SERVER_ERROR).json({ error }));
+    },
+  );
+
+router
   .route('/:_id')
   .get(
     authentication,
