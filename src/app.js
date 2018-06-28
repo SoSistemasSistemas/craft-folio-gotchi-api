@@ -36,11 +36,20 @@ const server = app.listen(parseInt(API_PORT, 10), () => {
 const io = require('socket.io')(server);
 
 io.on('connection', (socket) => {
-  socket.on('moved', (data) => {
-    io.emit('moved', data);
+  socket.on('moved', ({ username, room, newPosition }) => {
+    io.to(room).emit('moved', { username, newPosition });
   });
 
-  socket.on('jumped', (data) => {
-    io.emit('jumped', data);
+  socket.on('jumped', ({ username, room }) => {
+    io.to(room).emit('jumped', username);
   });
+
+  socket.on('join-room', ({ room, user }) => {
+    io.to(room).emit('joined-room', { user });
+    socket.join(room);
+  });
+
+  // socket.on('disconnect', () => {
+  //   console.log('Oi');
+  // });
 });
