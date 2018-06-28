@@ -31,3 +31,9 @@ spec:
           value: mongodb://craft-folio-gotchi-mongo:27017/craft-folio-gotchi
         - name: JWT_SECRET
           value: 10b1346b75e107cc522ee6ad440d409e
+        - name: FRONT_END_URI
+          value: http://35.241.37.46
+        - name: FIREBASE_SERVER_KEY
+          value: AAAAmrisMMY:APA91bFI1Y4NJW5uju81qN1X-tXhtH7UVL-rMvxvVNBOS83i6WKP8HavG5lm69A2DvPpcl0woWCx_bM_PC_hyVjBSWNQNRea4OceLaJA9Ogh6lI0ljL753m1j9T4vfXbAamnAVkumirxa_GmXDZ5cbdoAD2WcJYfHg
+        - name: FIREBASE_SENDER_URI
+          value: https://fcm.googleapis.com/fcm/send

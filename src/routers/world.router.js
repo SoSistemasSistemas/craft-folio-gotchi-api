@@ -8,7 +8,10 @@ const World = require('../models/world.model');
 const authentication = require('../middlewares/authentication.middleware');
 const worldOwnership = require('../middlewares/worldOwnership.middleware');
 
+const notificationService = require('../services/notification.service');
 const widgetService = require('../services/widget.service');
+
+const { FRONT_END_URI, NODE_ENV } = process.env;
 
 const router = express.Router();
 
@@ -48,6 +51,28 @@ const addVisitor = (world, visitor) => {
 const defineOwnership =
   (world, user) => ({ ...world._doc, isOwner: world.owner.username === user.username });
 
+const notifyOwnerAboutNewVisits = (world) => {
+  const visitsCount = world.visitors.length;
+
+  const title = `Parabéns, ${world.owner.username}!`;
+  const message = `Seu mundo acaba de atingir ${visitsCount} visitas únicas!`;
+
+  if (world.owner.webPushToken && NODE_ENV !== 'production') {
+    const data = {
+      title,
+      options: {
+        body: message,
+        icon: world.owner.avatarUrl,
+        data: {
+          click_action: `${FRONT_END_URI}/worlds/${world.owner.username}`,
+        },
+      },
+    };
+
+    notificationService.sendWebPushNotification({ token: world.owner.webPushToken, data });
+  }
+};
+
 router
   .route('/:ownerUsername')
   .get(
@@ -55,9 +80,22 @@ router
     (req, res) => {
       const { ownerUsername } = req.params;
 
+      let oldVisitsCount;
       World.findOne({ 'owner.username': ownerUsername })
+        .then((world) => {
+          oldVisitsCount = world.visitors.length;
+
+          return world;
+        })
         .then(world => addVisitor(world, req.user))
         .then(world => defineOwnership(world, req.user))
+        .then((world) => {
+          if (!world.isOwner && world.visitors.length > oldVisitsCount) {
+            notifyOwnerAboutNewVisits(world);
+          }
+
+          return world;
+        })
         .then(world => (world ? res.status(OK).json(world) : res.status(NOT_FOUND).json(world)))
         .catch(error => res.status(INTERNAL_SERVER_ERROR).json({ error }));
     },

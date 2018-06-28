@@ -34,6 +34,7 @@ router
       const { token } = req.body;
 
       User.findOneAndUpdate({ username }, { webPushToken: token })
+        .then(() => World.findOneAndUpdate({ 'owner.username': username }, { 'owner.webPushToken': token }))
         .then(() => res.status(NO_CONTENT).json())
         .catch(error => res.status(INTERNAL_SERVER_ERROR).json({ error }));
     },

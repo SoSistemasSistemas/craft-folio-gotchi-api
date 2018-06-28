@@ -10,6 +10,9 @@ services:
       - API_PORT=3000
       - JWT_SECRET=10b1346b75e107cc522ee6ad440d409e
       - MONGO_CONNECTION_STRING=mongodb://mongo:27017/craft-folio-gotchi
+      - FRONT_END_URI=http://localhost
+      - FIREBASE_SERVER_KEY=AAAAmrisMMY:APA91bFI1Y4NJW5uju81qN1X-tXhtH7UVL-rMvxvVNBOS83i6WKP8HavG5lm69A2DvPpcl0woWCx_bM_PC_hyVjBSWNQNRea4OceLaJA9Ogh6lI0ljL753m1j9T4vfXbAamnAVkumirxa_GmXDZ5cbdoAD2WcJYfHg
+      - FIREBASE_SENDER_URI=https://fcm.googleapis.com/fcm/send
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
