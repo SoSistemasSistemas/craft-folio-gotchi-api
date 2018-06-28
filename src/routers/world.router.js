@@ -45,6 +45,9 @@ const addVisitor = (world, visitor) => {
   return world;
 };
 
+const defineOwnerShip =
+  (world, user) => ({ ...world._doc, isOwner: world.owner.username === user.username });
+
 router
   .route('/:ownerUsername')
   .get(
@@ -54,6 +57,7 @@ router
 
       World.findOne({ 'owner.username': ownerUsername })
         .then(world => addVisitor(world, req.user))
+        .then(world => defineOwnerShip(world, req.user))
         .then(world => (world ? res.status(OK).json(world) : res.status(NOT_FOUND).json(world)))
         .catch(error => res.status(INTERNAL_SERVER_ERROR).json({ error }));
     },
